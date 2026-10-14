@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Expense Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">PERSONAL FINANCE</p>
+        <h1>Expense Tracker</h1>
+        <p class="subtitle">Keep track of where your money goes.</p>
+      </div>
+      <div class="total-card">
+        <span>Total expenses</span>
+        <strong id="totalAmount">₹0.00</strong>
+      </div>
+    </header>
+
+    <section class="card">
+      <h2>Add an expense</h2>
+      <form id="expenseForm">
+        <div class="form-grid">
+          <label>
+            Expense name
+            <input id="expenseName" type="text" placeholder="e.g. Lunch" maxlength="60" required />
+          </label>
+          <label>
+            Amount (₹)
+            <input id="expenseAmount" type="number" placeholder="e.g. 250" min="0.01" step="0.01" required />
+          </label>
+          <label>
+            Category
+            <select id="expenseCategory" required>
+              <option value="Food">Food</option>
+              <option value="Travel">Travel</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Bills">Bills</option>
+              <option value="Education">Education</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+          <label>
+            Date
+            <input id="expenseDate" type="date" required />
+          </label>
+        </div>
+        <button type="submit" class="primary-button">+ Add expense</button>
+        <p id="formMessage" class="message" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="list-header">
+        <div>
+          <h2>Your expenses</h2>
+          <p class="muted">Your expenses stay saved in this browser.</p>
+        </div>
+        <label class="filter-label">
+          Filter
+          <select id="categoryFilter">
+            <option value="All">All categories</option>
+            <option value="Food">Food</option>
+            <option value="Travel">Travel</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Bills">Bills</option>
+            <option value="Education">Education</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Expense</th>
+              <th>Category</th>
+              <th>Date</th>
+              <th class="amount-column">Amount</th>
+              <th aria-label="Actions"></th>
+            </tr>
+          </thead>
+          <tbody id="expenseList"></tbody>
+        </table>
+      </div>
+      <div id="emptyState" class="empty-state">
+        <div class="empty-icon">₹</div>
+        <strong>No expenses yet</strong>
+        <p>Add your first expense using the form above.</p>
+      </div>
+      <div class="footer-row">
+        <span id="expenseCount">0 expenses</span>
+        <button id="clearAllButton" class="text-button" type="button">Clear all</button>
+      </div>
+    </section>
+    <footer>Simple Expense Tracker · Demo project</footer>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
