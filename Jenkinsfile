@@ -38,11 +38,18 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                sh 'kubectl apply -f k8s/'
-                sh 'kubectl rollout status deployment/expense-tracker'
-            }
-        }
+        
+stage('Deploy to Kubernetes') {
+    steps {
+        sh '''
+            export KUBECONFIG=/var/lib/jenkins/.kube/config
+            kubectl apply -f k8s/
+            kubectl rollout restart deployment/expense-tracker
+            kubectl rollout status deployment/expense-tracker --timeout=120s
+        '''
     }
 }
+
+        }
+    }
+
