@@ -3,12 +3,11 @@ pipeline {
 
     environment {
         PATH = "/Users/aayushijaju/.docker/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-        DOCKER_IMAGE = 'aayushijaju/expense-tracker'
+        DOCKER_IMAGE = 'aayushijaju0305/expense-tracker'
         DOCKER_CREDENTIALS = 'dockerhub-credentials'
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 git branch: 'main',
@@ -21,7 +20,6 @@ pipeline {
                 sh '''
                     echo "Docker location:"
                     which docker
-
                     echo "Docker version:"
                     docker --version
                 '''
@@ -54,6 +52,7 @@ pipeline {
                     )
                 ]) {
                     sh '''
+                        set +x
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                         docker push ${DOCKER_IMAGE}:latest
                         docker logout
