@@ -1,9 +1,9 @@
-```groovy
 pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'aayushijaju/expense-tracker:latest'
+        DOCKER_IMAGE = 'aayushijaju/expense-tracker'
+        DOCKER_CREDENTIALS = 'dockerhub-credentials'
     }
 
     stages {
@@ -18,9 +18,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh '''
-                    export PATH="$HOME/.docker/bin:/usr/local/bin:/opt/homebrew/bin:$PATH"
-
-                    docker build -t $DOCKER_IMAGE .
+                    docker build -t ${DOCKER_IMAGE}:latest .
                 '''
             }
         }
@@ -28,9 +26,7 @@ pipeline {
         stage('Test Docker Image') {
             steps {
                 sh '''
-                    export PATH="$HOME/.docker/bin:/usr/local/bin:/opt/homebrew/bin:$PATH"
-
-                    docker image inspect $DOCKER_IMAGE
+                    docker image inspect ${DOCKER_IMAGE}:latest
                 '''
             }
         }
@@ -39,19 +35,15 @@ pipeline {
             steps {
                 withCredentials([
                     usernamePassword(
-                        credentialsId: 'dockerhub-credentials',
+                        credentialsId: "${DOCKER_CREDENTIALS}",
                         usernameVariable: 'DOCKER_USER',
                         passwordVariable: 'DOCKER_PASS'
                     )
                 ]) {
                     sh '''
-                        export PATH="$HOME/.docker/bin:/usr/local/bin:/opt/homebrew/bin:$PATH"
-
-                        echo "$DOCKER_PASS" | docker login \
-                            -u "$DOCKER_USER" \
-                            --password-stdin
-
-                        docker push $DOCKER_IMAGE
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push ${DOCKER_IMAGE}:latest
+                        docker logout
                     '''
                 }
             }
@@ -60,10 +52,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
-                    export PATH="$HOME/.docker/bin:/usr/local/bin:/opt/homebrew/bin:$PATH"
-
-                    kubectl apply -f deployment.yaml
-                    kubectl apply -f service.yaml
+                    kubectl apply -f k8s/
                 '''
             }
         }
@@ -71,12 +60,11 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline completed successfully! 🎉'
+            echo 'CI/CD Pipeline completed successfully!'
         }
 
         failure {
-            echo 'Pipeline failed. Check the stage above for the error.'
+            echo 'CI/CD Pipeline failed.'
         }
     }
 }
-```
