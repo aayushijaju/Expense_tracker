@@ -2,6 +2,10 @@
 pipeline {
     agent any
 
+    environment {
+        PATH = "/Users/aayushijaju/.docker/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+        DOCKER_HOST = "unix:///Users/aayushijaju/.docker/run/docker.sock"
+    }
     stages {
         stage('Checkout') {
             steps {
