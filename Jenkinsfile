@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        PATH = "/Users/aayushijaju/.docker/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
         DOCKER_IMAGE = 'aayushijaju/expense-tracker'
         DOCKER_CREDENTIALS = 'dockerhub-credentials'
     }
@@ -12,6 +13,18 @@ pipeline {
             steps {
                 git branch: 'main',
                     url: 'https://github.com/aayushijaju/Expense_tracker.git'
+            }
+        }
+
+        stage('Check Docker') {
+            steps {
+                sh '''
+                    echo "Docker location:"
+                    which docker
+
+                    echo "Docker version:"
+                    docker --version
+                '''
             }
         }
 
