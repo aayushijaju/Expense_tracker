@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -20,6 +21,7 @@ pipeline {
                 sh '''
                     echo "Docker location:"
                     which docker
+
                     echo "Docker version:"
                     docker --version
                 '''
@@ -64,7 +66,17 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
+                    echo "Applying Kubernetes configuration..."
                     kubectl apply -f k8s/
+
+                    echo "Restarting Kubernetes deployment..."
+                    kubectl rollout restart deployment/expense-tracker
+
+                    echo "Waiting for deployment..."
+                    kubectl rollout status deployment/expense-tracker
+
+                    echo "Checking running pods..."
+                    kubectl get pods
                 '''
             }
         }
