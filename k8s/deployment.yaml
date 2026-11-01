@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: expense-tracker
-          image: aayushijaju/expense-tracker:latest
+          image: aayushijaju0305/expense-tracker:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
